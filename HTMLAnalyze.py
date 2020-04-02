@@ -23,11 +23,11 @@ if __name__ == '__main__':
     parser = HTMLParser(tokens)
     tree = parser.htmlDocument()
 
-    listener = HTMLAnalyzeListener(tokens)
+    listener = HTMLAnalyzeListener()
     walker = ParseTreeWalker()
     walker.walk(listener, tree)
     
     f = open(output_file, 'w')
-    out_stream = listener.rewriter.getDefaultText()
+    out_stream = listener.getCSV(tree)
     f.write(out_stream)
     f.close()

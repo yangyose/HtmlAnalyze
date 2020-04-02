@@ -8,8 +8,13 @@ from HTMLLexer                  import HTMLLexer
 
 class HTMLAnalyzeListener(HTMLParserListener):
 
-    # need rewriter to change token stream
-    def __init__(self, tokens:TokenStream):
-        self.tokens = tokens
-        self.rewriter = TokenStreamRewriter(tokens)
+    def __init__(self):
+        # output area by node
+        self.csv = {}
+
+    def getCSV(self, ctx):
+        return self.csv[ctx]
+
+    def setCSV(self, ctx, value):
+        self.csv[ctx] = value
                     
