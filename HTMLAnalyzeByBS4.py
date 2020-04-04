@@ -10,8 +10,17 @@ class HTMLAnalyze:
     def __init__(self, input_stream, parser):
         self.__soup = BeautifulSoup(input_stream, parser)
         
-    def getNameValByTag(self, tag_name):
-        return []    
+    def getNameValByTag(self, tag_name, init_data = []):
+        r = init_data
+        for tag in self.__soup(tag_name):
+            if tag['name']:
+                name = tag['name']
+                if tag['value']:
+                    value = tag['value']
+                else:
+                    value = tag.string
+                r.append([name, value])
+        return r    
 
 if __name__ == '__main__':
     # Parse options
