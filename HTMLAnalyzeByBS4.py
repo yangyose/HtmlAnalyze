@@ -5,6 +5,10 @@ from bs4 import BeautifulSoup
 class InputStream:
     def __init__(self, input_file, active_page):
         self.stream = ''
+        if input_file:
+            f = open(input_file, 'r')
+            self.stream = f.read()
+            f.close()
         
 class HTMLAnalyze:
     def __init__(self, input_stream, parser):
@@ -12,13 +16,13 @@ class HTMLAnalyze:
         
     def getNameValByTag(self, tag_name, init_data = []):
         r = init_data
-        for tag in self.__soup(tag_name):
-            if tag['name']:
+        for tag in self.__soup.select(tag_name):
+            if 'name' in tag.attrs.keys():
                 name = tag['name']
-                if tag['value']:
+                if 'value' in tag.attrs.keys():
                     value = tag['value']
                 else:
-                    value = tag.string
+                    value = tag.string if tag.string else ''
                 r.append([name, value])
         return r    
 
@@ -43,8 +47,8 @@ if __name__ == '__main__':
                       help='set output file name'
                       )
     options, remainder = parser.parse_args()
-    if not options.input_file and not options.active_page:
-        print('ERROR: You have to provide input file name or set to active page!')
+    if (options.input_file and options.active_page) or not (options.input_file or options.active_page):
+        print('ERROR: You have to provide one of input file name or set to active page!')
         parser.print_help()
         exit(1)
 
@@ -60,6 +64,6 @@ if __name__ == '__main__':
     for data in pairs:
         outStream += data[0] + ',' + data[1] + '\n'
     f = open(options.output_file, 'w')
-    f.write(out_stream)
+    f.write(outStream)
     f.close()
     
